@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { reactive } from 'vue';
-import { DataSet, Feature, MapLayer } from '../components/types';
+import { DataSet, MapLayer } from '../components/types';
+import { useProgrammatic } from '@oruga-ui/oruga-next';
 
 export const useStore = defineStore('store', () => {
   const initialState = {
@@ -12,17 +13,20 @@ export const useStore = defineStore('store', () => {
 
   const state = reactive({ ...initialState });
 
+  const { oruga } = useProgrammatic();
+
   function resetStore() {
     Object.assign(state, initialState);
   }
 
   async function fetchData(url: string) {
     state.loading = true;
+    let response = null;
     try {
-      const response = await axios.get(url);
+      response = await axios.get(url);
       state.data = response.data;
     } catch (error: any) {
-      console.log('error', error);
+      showError(error);
     } finally {
       state.loading = false;
     }
@@ -40,6 +44,16 @@ export const useStore = defineStore('store', () => {
     state.layers = state.layers.map((layer: MapLayer) => {
       if (layer.id === layerId) layer.visible = !layer.visible;
       return layer;
+    });
+  }
+
+  function showError(error: any) {
+    const notif = oruga.notification.open({
+      message: `Er is iets misgegaan, ${error}`,
+      variant: 'danger',
+      position: 'top',
+      closable: true,
+      indefinite: true
     });
   }
 

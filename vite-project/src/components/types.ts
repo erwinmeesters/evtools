@@ -56,12 +56,14 @@ export interface MapLayer {
     'circle-stroke-color': string;
   };
   visible: boolean;
+  total: number;
 }
 
 export enum Colors {
-  Spreeuw = '#D7263D',
-  Huismus = '#F46036',
-  Gierzwaluw = '#2E294E',
-  Boerenzwaluw = '#1B998B',
-  Huiszwaluw = '#C5D86D'
+  Spreeuw = '#D62828',
+  Huismus = '#FCBF49',
+  Gierzwaluw = '#1B998B',
+  Boerenzwaluw = '#4CC9F0',
+  Huiszwaluw = '#8338EC',
+  Undefined = '#333333'
 }

@@ -9,11 +9,18 @@
   import { computed, onMounted, watch } from 'vue';
   import { DataSet, MapConfig, MapLayer, Properties } from './types';
 
-  const props = defineProps<{
-    config: MapConfig;
-    data: DataSet;
-    layers: Array<MapLayer>;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      source: string;
+      config: MapConfig;
+      data: DataSet;
+      layers: Array<MapLayer>;
+      filter: string;
+    }>(),
+    {
+      source: 'src'
+    }
+  );
 
   const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
@@ -22,15 +29,11 @@
   let map: any;
 
   watch(
-    () => props.layers,
-    (layers) => {
-      layers.forEach((layer: MapLayer) => {
+    () => layers.value,
+    (lyrs) => {
+      lyrs.forEach((layer: MapLayer) => {
         if (map.getLayer(layer.id)) {
-          map.setLayoutProperty(
-            layer.id,
-            'visibility',
-            layer.visible ? 'visible' : 'none'
-          );
+          map.setLayoutProperty(layer.id, 'visibility', layer.visible ? 'visible' : 'none');
         }
       });
     },
@@ -49,24 +52,24 @@
     });
 
     map.on('load', () => {
-      map.addSource('src', {
+      map.addSource(props.source, {
         type: 'geojson',
         data: data.value
       });
 
       for (const layer of layers.value) {
         map.addLayer(layer);
-        map.setFilter(layer.id, ['==', ['get', 'Vogel'], layer.id]);
+        map.setFilter(layer.id, ['==', ['get', props.filter], layer.id]);
 
         map.on('mouseenter', layer.id, (e: any) => {
           map.getCanvas().style.cursor = 'pointer';
           const coordinates = e.features[0].geometry.coordinates.slice();
-          const props = e.features[0].properties as Properties;
+          const lProps = e.features[0].properties as Properties;
 
           const description = `<div>
-            <div><strong>${props.Vogel}</strong></div>
-            <div>${props.Straatnaam} ${props.Huisnummer}</div>
-            <div>${props.Verblijfplaats}</div>           
+            <div><strong>${lProps.Vogel}</strong></div>
+            <div>${lProps.Straatnaam} ${lProps.Huisnummer}</div>
+            <div>${lProps.Verblijfplaats}</div>           
           </div>`;
 
           while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {

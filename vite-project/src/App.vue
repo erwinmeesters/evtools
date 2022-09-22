@@ -111,6 +111,9 @@
       transition: left 0.3s;
       left: 0;
     }
+    @media screen and (max-width: 25rem) {
+      width: 100vw;
+    }
   }
   .filter-toggler {
     display: flex;

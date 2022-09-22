@@ -7,8 +7,11 @@
       :layers="store.state.layers"
       :filter="filter"
     />
-    <div class="filters-wrapper">
+    <div class="filters-wrapper" :class="{ 'is-open': isOpen }">
       <filters title="Vogelbroedplaatsen in Amsterdam" />
+      <span class="filter-toggler" @click="isOpen = !isOpen"
+        ><i class="fas fa-bars" :class="{ 'fa-times': isOpen }" />
+      </span>
     </div>
   </div>
 </template>
@@ -19,6 +22,7 @@
   import { Colors, Feature, MapConfig, MapLayer } from './components/types';
   import { useStore } from './store';
   import Filters from './components/Filters.vue';
+  import { useMediaQuery } from '@vueuse/core';
 
   //mapbox config
   const config = ref<MapConfig>({
@@ -36,6 +40,10 @@
 
   // data prop waar op gefilterd wordt
   const filter = 'Vogel';
+
+  // check breedte scherm en toon het filter indien > 1024px, anders klap filter in.
+  // https://vueuse.org/
+  const isOpen = useMediaQuery('(min-width: 1024px)');
 
   // reference naar de Pinia store
   const store = useStore();
@@ -86,16 +94,39 @@
 </script>
 
 <style lang="scss" scoped>
+  $box-width: 25rem;
   .filters-wrapper {
     position: absolute;
     top: 0;
-    left: 0;
+    left: calc(-#{$box-width} - 3px);
     background: rgba($white, 0.95);
     display: flex;
     flex-flow: column nowrap;
     padding: 1rem 2rem;
-    box-shadow: rgba($black, 0.5) 0px 5px 15px;
-    overflow-y: auto;
+    box-shadow: $box-shadow;
+    width: $box-width;
     max-height: calc(100vh - 2rem);
+    max-width: 50vw;
+    transition: left 0.3s;
+    &.is-open {
+      transition: left 0.3s;
+      left: 0;
+    }
+  }
+  .filter-toggler {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    background: $white;
+    position: absolute;
+    top: 1rem;
+    right: -3rem;
+    box-shadow: $box-shadow;
+    font-size: 1.5rem;
+    cursor: pointer;
+    background: $warning;
+    color: $white;
   }
 </style>

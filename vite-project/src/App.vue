@@ -106,7 +106,6 @@
     box-shadow: $box-shadow;
     width: $box-width;
     max-height: calc(100vh - 2rem);
-    max-width: 50vw;
     transition: left 0.3s;
     &.is-open {
       transition: left 0.3s;

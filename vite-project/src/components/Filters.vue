@@ -15,7 +15,7 @@
     <span>{{ layer.visible ? layer.total : 0 }}</span>
   </label>
   <footer>
-    <span class="total"><i class="fas fa-crow icon" />{{ total }}</span>
+    <span class="total">{{ total }}</span>
   </footer>
 </template>
 
@@ -30,6 +30,7 @@
   const store = useStore();
 
   const total = computed(() => {
+    // bereken de totale hoeveelheid vogels aan de hand van het totaal van elke layer (vogel)
     let totalPerLayer = 0;
     store.state.layers.map((layer) => {
       totalPerLayer += layer.visible ? layer.total : 0;
@@ -69,11 +70,6 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 0.25rem;
-
-    .icon {
-      margin-right: 0.5rem;
-      color: $black;
-    }
 
     .total {
       border-top: 1px solid $grey;

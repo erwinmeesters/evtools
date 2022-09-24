@@ -3,6 +3,7 @@ export interface MapConfig {
   style: string;
   center: Coordinates;
   zoom: number;
+  maxBounds: Array<Coordinates>;
 }
 
 export type Coordinates = Array<number | number>;

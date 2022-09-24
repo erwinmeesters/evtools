@@ -31,8 +31,8 @@
     center: [4.92, 52.35],
     zoom: 11,
     maxBounds: [
-      [4.52, 52.25], // Zuidwest coordinaten
-      [5.32, 52.45] // Noordoost coordinaten
+      [4.62, 52.25], // Zuidwest coordinaten
+      [5.22, 52.45] // Noordoost coordinaten
     ]
   });
 
